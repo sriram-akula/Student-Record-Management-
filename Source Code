@@ -1,0 +1,113 @@
+-- MySQL dump 10.13  Distrib 5.6.33, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: w3resour_hr
+-- ------------------------------------------------------
+-- Server version	5.6.33-0ubuntu0.14.04.1
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+--
+-- Table structure for table `countries`
+--
+-- Drop the Students table if it already exists to prevent errors during table creation
+DROP TABLE IF EXISTS Students;
+-- Create the Students table with the following columns:
+-- student_id: unique identifier, auto-incremented
+-- name: name of the student, cannot be null
+-- email: optional email field for the student
+-- phone_number: optional contact number for the student
+-- enrollment_date: date when the student enrolled, defaults to the current date
+CREATE TABLE Students (
+    student_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone_number VARCHAR(15),
+    enrollment_date DATE DEFAULT (CURRENT_DATE)
+);
+-- Insert student records into the Students table
+INSERT INTO Students (name, email, phone_number) VALUES
+(' Liam Gentry', 'lima@example.com', '1234567890'),
+(' Lyric Glass', 'lyric@example.com', '0987654321');
+-- Drop the Teachers table if it already exists
+DROP TABLE IF EXISTS Teachers;
+-- Create the Teachers table with the following columns:
+-- teacher_id: unique identifier, auto-incremented
+-- name: name of the teacher, cannot be null
+-- email: optional email field for the teacher
+-- hire_date: date the teacher was hired, defaults to the current date
+CREATE TABLE Teachers (
+    teacher_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    hire_date DATE DEFAULT (CURRENT_DATE)
+);
+-- Insert teacher records into the Teachers table
+INSERT INTO Teachers (name, email) VALUES
+(' Aiden Nichols', 'alice@example.com'),
+(' Beau Booth', 'beau@example.com');
+-- Drop the Courses table if it already exists
+DROP TABLE IF EXISTS Courses;
+-- Create the Courses table with the following columns:
+-- course_id: unique identifier for each course, auto-incremented
+-- course_name: name of the course, cannot be null
+-- teacher_id: references the teacher who teaches the course, foreign key from Teachers table
+CREATE TABLE Courses (
+    course_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(255) NOT NULL,
+    teacher_id INT,
+    FOREIGN KEY (teacher_id) REFERENCES Teachers(teacher_id)
+);
+-- Insert course records into the Courses table, associating each course with a teacher
+INSERT INTO Courses (course_name, teacher_id) VALUES
+('Mathematics', 1),
+('Physics', 2);
+-- Drop the Enrollments table if it already exists
+DROP TABLE IF EXISTS Enrollments;
+-- Create the Enrollments table to track student enrollment in courses:
+-- enrollment_id: unique identifier, auto-incremented
+-- student_id: foreign key referencing the Students table
+-- course_id: foreign key referencing the Courses table
+-- enrollment_date: date when the student enrolled in the course, defaults to current date
+CREATE TABLE Enrollments (
+    enrollment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    enrollment_date DATE DEFAULT (CURRENT_DATE),
+    FOREIGN KEY (student_id) REFERENCES Students(student_id),
+    FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+-- Insert enrollment records for students into courses
+INSERT INTO Enrollments (student_id, course_id) VALUES
+(1, 1), -- Student 1 enrolls in Course 1
+(2, 2); -- Student 2 enrolls in Course 2
+-- Drop the Grades table if it already exists
+DROP TABLE IF EXISTS Grades;
+-- Create the Grades table to store the grades students receive in courses:
+-- grade_id: unique identifier, auto-incremented
+-- student_id: foreign key referencing the Students table
+-- course_id: foreign key referencing the Courses table
+-- grade: letter grade assigned to the student in the course
+CREATE TABLE Grades (
+    grade_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    grade CHAR(2),
+    FOREIGN KEY (student_id) REFERENCES Students(student_id),
+    FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+);
+-- Insert grade records for students in their respective courses
+INSERT INTO Grades (student_id, course_id, grade) VALUES
+(1, 1, 'A'), -- Student 1 gets grade 'A' in Course 1
+(2, 2, 'B'); -- Student 2 gets grade 'B' in Course 2
+-- Queries
+
+
+-- Write your Query here.
+
